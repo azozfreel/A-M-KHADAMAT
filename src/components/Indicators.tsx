@@ -1,5 +1,4 @@
 import React from 'react';
-import { Shield, Sparkles, Zap, Layers, RefreshCw } from 'lucide-react';
 import { indicatorsData } from '../data/content';
 import { Language } from '../types';
 
@@ -9,51 +8,53 @@ interface IndicatorsProps {
 
 export const Indicators: React.FC<IndicatorsProps> = ({ lang }) => {
   return (
-    <section className="py-20 relative overflow-hidden bg-[#0A0C11]/50 border-t border-b border-white/[0.04]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold mb-2 block">
-            {lang === 'ar' ? 'منهجية ومعايير العمل' : 'Execution Principles & Indicators'}
+    <section className="py-24 border-t border-slate-800/60 text-start">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-xs font-semibold text-amber-400/90 tracking-wider uppercase mb-2 block">
+            {lang === 'ar' ? 'المعايير المهنية' : 'Standards'}
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-            {lang === 'ar' ? 'مؤشرات الأداء والالتزام المهني' : 'Operational Pillars & Focus'}
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-100 tracking-tight mb-4">
+            {lang === 'ar' ? 'مؤشرات الأداء والالتزام' : 'Operational Principles'}
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
             {lang === 'ar'
-              ? 'نبتعد عن الأرقام التسويقية الوهمية؛ المعيار الحقيقي هو وضوح الرؤية، الانضباط في إدارة المخاطر، والقيمة الفعلية المقدمة في كل مشروع.'
-              : 'Rejecting fabricated marketing statistics in favor of transparent execution metrics: disciplined risk, verified craft, and continuous self-evolution.'}
+              ? 'معايير عمل واضحة تقوم على الانضباط، الجودة، والتطوير المستمر في كل مشروع.'
+              : 'Clear operating principles rooted in discipline, craft, and continuous adaptation.'}
           </p>
         </div>
 
-        {/* 4 Authentic Indicator Cards */}
+        {/* 4 Cards Grid - Calm & Professional */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {indicatorsData.map((item, index) => (
             <div
               key={index}
-              className="p-6 rounded-2xl bg-zinc-950/70 border border-white/[0.06] hover:border-emerald-500/30 transition-all duration-300 group flex flex-col justify-between"
+              className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800/70 hover:border-slate-700/80 transition-colors flex flex-col justify-between shadow-xs"
             >
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-mono text-emerald-400 font-semibold px-2.5 py-1 rounded-md bg-emerald-950/40 border border-emerald-500/20">
+                <div className="flex items-center justify-between mb-3.5">
+                  <span className="text-xs font-mono text-amber-300/90 px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700/80">
                     {item.badge}
                   </span>
-                  <span className="text-xs font-mono text-zinc-400">0{index + 1}</span>
+                  <span className="text-xs font-mono text-slate-500">0{index + 1}</span>
                 </div>
 
-                <h3 className="text-base font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+                <h3 className="text-base font-bold text-slate-100 mb-2">
                   {lang === 'ar' ? item.title : item.titleEn}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
                   {lang === 'ar' ? item.desc : item.descEn}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-400 font-mono">
-                <span>{lang === 'ar' ? 'حالة المعيار' : 'Status'}</span>
-                <span className="text-emerald-400 font-bold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  {lang === 'ar' ? 'مطبّق دائماً' : 'Active Standard'}
+              <div className="mt-5 pt-3.5 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 font-mono">
+                <span>{lang === 'ar' ? 'الحالة' : 'Status'}</span>
+                <span className="text-slate-300 font-medium flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                  {lang === 'ar' ? 'معيار دائم' : 'Active'}
                 </span>
               </div>
             </div>

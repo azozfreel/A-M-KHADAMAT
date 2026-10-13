@@ -1,24 +1,35 @@
 import React from 'react';
-import { ArrowUp, CreditCard, Lock, ShieldCheck, Scale, FileText, Cookie } from 'lucide-react';
-import { Language } from '../types';
-import { LegalDocType } from '../types/bank';
+import { ArrowUp, CreditCard, Lock, Sparkles } from 'lucide-react';
+import { Language, Theme } from '../types';
+import { ActivePage, LegalDocType } from '../types/bank';
 
 interface FooterProps {
   lang: Language;
-  onNavigateBanks?: () => void;
-  onNavigateAdmin?: () => void;
+  theme?: Theme;
+  onNavigatePage: (page: ActivePage) => void;
   onNavigateLegal?: (doc: LegalDocType) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   lang,
-  onNavigateBanks,
-  onNavigateAdmin,
+  theme = 'dark',
+  onNavigatePage,
   onNavigateLegal,
 }) => {
+  const isDark = theme === 'dark';
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const navLinks: { id: ActivePage; labelAr: string; labelEn: string }[] = [
+    { id: 'home', labelAr: 'الرئيسية', labelEn: 'Home' },
+    { id: 'about', labelAr: 'من أنا', labelEn: 'About' },
+    { id: 'disciplines', labelAr: 'مجالات العمل', labelEn: 'Disciplines' },
+    { id: 'projects', labelAr: 'الأعمال والمشاريع', labelEn: 'Projects' },
+    { id: 'banks', labelAr: 'الحسابات البنكية', labelEn: 'Bank Accounts' },
+    { id: 'contact', labelAr: 'تواصل معي', labelEn: 'Contact' },
+  ];
 
   const legalLinks: { id: LegalDocType; labelAr: string; labelEn: string }[] = [
     { id: 'terms', labelAr: 'الشروط والأحكام', labelEn: 'Terms & Conditions' },
@@ -29,81 +40,132 @@ export const Footer: React.FC<FooterProps> = ({
   ];
 
   return (
-    <footer className="py-14 bg-[#06070A] border-t border-white/[0.06] relative text-center">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer
+      className={`py-16 border-t relative text-center transition-colors ${
+        isDark ? 'bg-[#0B0D13] border-slate-800/70' : 'bg-slate-50 border-slate-200'
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center space-y-6">
           {/* Logo Monogram */}
-          <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-emerald-400 font-bold text-lg shadow-lg">
+          <button
+            onClick={() => onNavigatePage('home')}
+            className={`w-11 h-11 rounded-2xl border flex items-center justify-center font-bold text-sm shadow-xs cursor-pointer ${
+              isDark
+                ? 'bg-slate-900 border-slate-800 text-amber-400'
+                : 'bg-white border-slate-200 text-amber-600'
+            }`}
+          >
             AM
-          </div>
+          </button>
 
           {/* Name & Title */}
           <div>
-            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            <h3
+              className={`text-xl sm:text-2xl font-bold tracking-tight ${
+                isDark ? 'text-slate-100' : 'text-slate-900'
+              }`}
+            >
               {lang === 'ar' ? 'أيوب الميسوري' : 'Ayoub El Maissouri'}
             </h3>
-            <p className="text-xs sm:text-sm font-mono text-zinc-400 mt-1 uppercase tracking-wider">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1 uppercase tracking-wider font-mono">
               Digital Entrepreneur • E-Commerce • Online Business
             </p>
           </div>
 
           {/* Quick statement */}
-          <p className="text-xs text-zinc-400 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed font-normal">
             {lang === 'ar'
-              ? 'بناء وتطوير المشاريع الرقمية المعاصرة بانضباط وإبداع مستمر.'
-              : 'Architecting high-leverage digital ventures through disciplined market execution and refined creative craft.'}
+              ? 'بناء وتطوير المشاريع الرقمية والمتاجر الإلكترونية المعاصرة بانضباط وإبداع مستمر.'
+              : 'Architecting high-leverage digital ventures through disciplined market execution.'}
           </p>
 
-          {/* Navigation Action Links: Bank Accounts & Admin Gate & Back to top */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {onNavigateBanks && (
+          {/* Main Pages Navigation in Footer */}
+          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium">
+            {navLinks.map((item) => (
               <button
-                onClick={onNavigateBanks}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 hover:text-emerald-300 bg-zinc-900/80 hover:bg-zinc-800 border border-white/[0.06] transition-colors cursor-pointer"
+                key={item.id}
+                onClick={() => {
+                  onNavigatePage(item.id);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`transition-colors cursor-pointer ${
+                  isDark
+                    ? 'text-slate-300 hover:text-amber-300'
+                    : 'text-slate-600 hover:text-amber-600'
+                }`}
               >
-                <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{lang === 'ar' ? 'الحسابات والتحويلات البنكية' : 'Bank Accounts & RIBs'}</span>
+                {lang === 'ar' ? item.labelAr : item.labelEn}
               </button>
-            )}
+            ))}
+          </nav>
 
-            {onNavigateAdmin && (
-              <button
-                onClick={onNavigateAdmin}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white bg-zinc-900/40 hover:bg-zinc-900 border border-white/[0.04] transition-colors cursor-pointer"
-                title="لوحة تحكم المسؤول لإدارة وتعديل الريبات"
-              >
-                <Lock className="w-3 h-3 text-zinc-400" />
-                <span>{lang === 'ar' ? 'بوابة المسؤول' : 'Admin Portal'}</span>
-              </button>
-            )}
+          {/* Navigation Action Links */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => {
+                onNavigatePage('banks');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
+                isDark
+                  ? 'bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-800'
+                  : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200 shadow-xs'
+              }`}
+            >
+              <CreditCard className="w-3.5 h-3.5 text-amber-500" />
+              <span>{lang === 'ar' ? 'الحسابات والتحويلات البنكية' : 'Bank Accounts & RIBs'}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                onNavigatePage('admin');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
+                isDark
+                  ? 'bg-slate-900/40 hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 border-slate-800/60'
+                  : 'bg-white hover:bg-slate-100 text-slate-500 border-slate-200'
+              }`}
+              title="لوحة تحكم المسؤول لإدارة وتعديل الريبات"
+            >
+              <Lock className="w-3.5 h-3.5 text-slate-400" />
+              <span>{lang === 'ar' ? 'بوابة المسؤول' : 'Admin Portal'}</span>
+            </button>
 
             <button
               onClick={scrollToTop}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-white/[0.06] transition-colors cursor-pointer"
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
+                isDark
+                  ? 'bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-white border-slate-800'
+                  : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200 shadow-xs'
+              }`}
             >
               <span>{lang === 'ar' ? 'العودة للأعلى' : 'Top'}</span>
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Dedicated Legal Links Row (Clean unboxed typographic links) */}
+          {/* Legal Links */}
           {onNavigateLegal && (
-            <div className="pt-4 border-t border-white/[0.04] w-full max-w-3xl mx-auto">
-              <span className="block text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">
-                {lang === 'ar' ? 'الشفافية والصفحات القانونية' : 'Legal & Compliance'}
-              </span>
-
-              <nav className="flex flex-wrap items-center justify-center gap-y-2 gap-x-4 text-xs text-zinc-400 font-medium">
+            <div
+              className={`pt-5 border-t w-full max-w-3xl mx-auto ${
+                isDark ? 'border-slate-800/70' : 'border-slate-200'
+              }`}
+            >
+              <nav className="flex flex-wrap items-center justify-center gap-y-2.5 gap-x-5 text-xs text-slate-400 font-medium">
                 {legalLinks.map((item, idx) => (
                   <React.Fragment key={item.id}>
                     <button
                       onClick={() => onNavigateLegal(item.id)}
-                      className="hover:text-emerald-400 transition-colors cursor-pointer"
+                      className="hover:text-amber-500 transition-colors cursor-pointer"
                     >
                       {lang === 'ar' ? item.labelAr : item.labelEn}
                     </button>
                     {idx < legalLinks.length - 1 && (
-                      <span aria-hidden="true" className="text-zinc-600 select-none">·</span>
+                      <span aria-hidden="true" className="text-slate-600 select-none">
+                        ·
+                      </span>
                     )}
                   </React.Fragment>
                 ))}
@@ -112,11 +174,18 @@ export const Footer: React.FC<FooterProps> = ({
           )}
 
           {/* Copyright notice */}
-          <div className="pt-6 border-t border-white/[0.04] w-full flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 gap-3">
+          <div
+            className={`pt-5 border-t w-full flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3 ${
+              isDark ? 'border-slate-800/70' : 'border-slate-200'
+            }`}
+          >
             <span>
-              © {new Date().getFullYear()} {lang === 'ar' ? 'أيوب الميسوري. جميع الحقوق محفوظة.' : 'Ayoub El Maissouri. All rights reserved.'}
+              © {new Date().getFullYear()}{' '}
+              {lang === 'ar'
+                ? 'أيوب الميسوري. جميع الحقوق محفوظة.'
+                : 'Ayoub El Maissouri. All rights reserved.'}
             </span>
-            <span className="font-mono text-[11px] text-zinc-400">
+            <span className="text-[11px] text-slate-400 font-mono">
               {lang === 'ar' ? 'العلامة الشخصية الرقمية' : 'Personal Brand Edition'}
             </span>
           </div>

@@ -23,16 +23,18 @@ import {
 } from 'lucide-react';
 import { bankService } from '../services/bankService';
 import { BankAccount } from '../types/bank';
-import { Language } from '../types';
+import { Language, Theme } from '../types';
 
 interface AdminPortalProps {
   lang: Language;
+  theme?: Theme;
   onNavigateHome: () => void;
   onNavigateBanks: () => void;
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({
   lang,
+  theme = 'dark',
   onNavigateHome,
   onNavigateBanks,
 }) => {
@@ -204,29 +206,29 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   // -------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#08090D] text-zinc-100 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="min-h-screen bg-[#0E1117] text-slate-200 flex items-center justify-center p-4 relative overflow-hidden">
         {/* Glow */}
-        <div className="absolute w-[500px] h-[350px] bg-emerald-500/10 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute w-[500px] h-[350px] bg-amber-500/[0.04] blur-[140px] rounded-full pointer-events-none" />
 
-        <div className="w-full max-w-md p-8 sm:p-10 rounded-3xl bg-zinc-950/90 border border-white/[0.08] shadow-2xl relative z-10 text-center">
+        <div className="w-full max-w-md p-8 sm:p-10 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl relative z-10 text-center">
           {/* Lock Icon */}
-          <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto mb-6 shadow-xl shadow-emerald-950/30">
-            <Lock className="w-8 h-8" />
+          <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700/80 flex items-center justify-center text-amber-400 mx-auto mb-5 shadow-xs">
+            <Lock className="w-7 h-7" />
           </div>
 
-          <h1 className="text-2xl font-black text-white mb-2">
+          <h1 className="text-2xl font-bold text-slate-100 mb-2">
             {lang === 'ar' ? 'منطقة المسؤول المحمية' : 'Admin Security Gateway'}
           </h1>
 
-          <p className="text-xs sm:text-sm text-zinc-400 mb-8 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-400 mb-8 leading-relaxed font-normal">
             {lang === 'ar'
               ? 'هذه الصفحة مخصصة للمسؤول فقط لإضافة وإدارة أرقام الريب البنكية وأسماء البنوك.'
               : 'Authorized access only. Log in to manage bank RIBs and display settings.'}
           </p>
 
-          <form onSubmit={handleLogin} className="space-y-5 text-start">
+          <form onSubmit={handleLogin} className="space-y-4 text-start">
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-2">
+              <label className="block text-xs font-medium text-slate-300 mb-2">
                 {lang === 'ar' ? 'كلمة مرور المسؤول (Passcode)' : 'Admin Password'}
               </label>
               <div className="relative">
@@ -236,12 +238,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/[0.1] text-white text-sm focus:outline-none focus:border-emerald-500/60 font-mono"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-amber-400/60 font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 left-3 sm:left-auto sm:right-3 flex items-center text-zinc-400 hover:text-white"
+                  className="absolute inset-y-0 left-3 sm:left-auto sm:right-3 flex items-center text-slate-400 hover:text-white"
                   aria-label="إظهار/إخفاء كلمة المرور"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -258,22 +260,22 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-400 to-teal-300 text-zinc-950 hover:brightness-105 shadow-xl shadow-emerald-500/20 transition-all cursor-pointer"
+              className="w-full py-3.5 rounded-xl font-semibold text-sm bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-xs transition-all cursor-pointer"
             >
               {lang === 'ar' ? 'تسجيل الدخول إلى لوحة التحكم' : 'Authenticate & Enter'}
             </button>
           </form>
 
           {/* Default password hint */}
-          <div className="mt-6 pt-4 border-t border-white/[0.06] text-xs text-zinc-400">
+          <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
             <span>{lang === 'ar' ? 'كلمة المرور الافتراضية للموقع: ' : 'Default passcode: '}</span>
-            <code className="text-emerald-400 font-mono font-bold bg-zinc-900 px-2 py-0.5 rounded">ayoub2026</code>
+            <code className="text-amber-300 font-mono font-bold bg-slate-800 px-2 py-0.5 rounded">ayoub2026</code>
           </div>
 
           <div className="mt-4">
             <button
               onClick={onNavigateHome}
-              className="text-xs text-zinc-400 hover:text-white transition-colors"
+              className="text-xs text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
             >
               ← {lang === 'ar' ? 'الرجوع إلى الموقع الرئيسي' : 'Return to Home'}
             </button>
@@ -287,10 +289,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   // Authenticated: Full Admin Dashboard
   // -------------------------------------------------------------
   return (
-    <div className="min-h-screen bg-[#08090D] text-zinc-100 pt-28 pb-20 relative overflow-hidden text-start">
+    <div className="min-h-screen bg-[#0E1117] text-slate-200 pt-32 pb-24 relative overflow-hidden text-start">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-500 text-zinc-950 px-5 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top duration-200">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-amber-400 text-slate-950 px-5 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top duration-200">
           <Check className="w-4 h-4" />
           <span>{successToast}</span>
         </div>
@@ -298,11 +300,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Top Action Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.08]">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-800/80">
           <div className="flex items-center gap-3">
             <button
               onClick={onNavigateHome}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white bg-zinc-900 border border-white/[0.06] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition-colors cursor-pointer"
             >
               <ArrowBackIcon className="w-3.5 h-3.5" />
               <span>{lang === 'ar' ? 'الموقع الرئيسي' : 'Home'}</span>
@@ -310,7 +312,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
             <button
               onClick={onNavigateBanks}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-300 hover:text-emerald-200 bg-emerald-950/40 border border-emerald-500/20 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-amber-300 hover:text-amber-200 bg-slate-900 border border-slate-800 transition-colors cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span>{lang === 'ar' ? 'معاينة صفحة الحسابات العامة' : 'View Public Page'}</span>
@@ -320,7 +322,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowChangePasswordModal(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 border border-white/[0.06]"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-slate-900 border border-slate-800 cursor-pointer"
             >
               <Key className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'ar' ? 'تغيير كلمة المرور' : 'Change Password'}</span>
@@ -328,7 +330,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-rose-400 hover:text-rose-300 bg-rose-950/30 border border-rose-500/20"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-rose-400 hover:text-rose-300 bg-rose-950/30 border border-rose-500/20 cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>{lang === 'ar' ? 'تسجيل الخروج' : 'Logout'}</span>
@@ -339,14 +341,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         {/* Header Title & Quick Stats */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-amber-400 text-xs font-semibold mb-2">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>{lang === 'ar' ? 'لوحة تحكم المسؤول المعتمدة' : 'Verified Admin Dashboard'}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-100">
               {lang === 'ar' ? 'إدارة الريبات والحسابات البنكية' : 'Bank Accounts & RIB Management'}
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1 font-normal">
               {lang === 'ar'
                 ? 'أضف أي بنك أو ريب تريده، وسيظهر فوراً في صفحة الحسابات البنكية داخل الموقع.'
                 : 'Add, update, or remove bank RIBs that appear instantly on the public website.'}
@@ -354,18 +356,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="px-4 py-2.5 rounded-2xl bg-zinc-950 border border-white/[0.08] text-center">
-              <span className="block text-xl font-bold text-white">{accounts.length}</span>
-              <span className="text-[10px] text-zinc-400 uppercase font-mono">
+            <div className="px-4 py-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-center">
+              <span className="block text-xl font-bold text-slate-100">{accounts.length}</span>
+              <span className="text-[10px] text-slate-400 uppercase font-mono">
                 {lang === 'ar' ? 'إجمالي الحسابات' : 'Total Banks'}
               </span>
             </div>
 
-            <div className="px-4 py-2.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/20 text-center">
-              <span className="block text-xl font-bold text-emerald-400">
+            <div className="px-4 py-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-center">
+              <span className="block text-xl font-bold text-amber-400">
                 {accounts.filter((a) => a.isActive).length}
               </span>
-              <span className="text-[10px] text-zinc-400 uppercase font-mono">
+              <span className="text-[10px] text-slate-400 uppercase font-mono">
                 {lang === 'ar' ? 'حسابات نشطة' : 'Active Public'}
               </span>
             </div>
@@ -375,7 +377,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 setEditingAccount(null);
                 setIsAddingNew(!isAddingNew);
               }}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs bg-gradient-to-r from-emerald-400 to-teal-300 text-zinc-950 hover:brightness-105 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-xs transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>{isAddingNew ? (lang === 'ar' ? 'إلغاء الإضافة' : 'Cancel') : (lang === 'ar' ? 'إضافة ريب بنكي جديد' : 'Add Bank RIB')}</span>
@@ -385,19 +387,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
         {/* Add / Edit Bank Form Accordion */}
         {isAddingNew && (
-          <div className="mb-12 p-6 sm:p-8 rounded-3xl bg-zinc-950 border border-emerald-500/40 shadow-2xl relative animate-in fade-in duration-300">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
+          <div className="mb-12 p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl relative animate-in fade-in duration-300">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-slate-800 text-amber-400 flex items-center justify-center">
                   <Building2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">
+                  <h3 className="text-lg font-bold text-slate-100">
                     {editingAccount
                       ? (lang === 'ar' ? 'تعديل بيانات الحساب البنكي' : 'Edit Bank Account')
                       : (lang === 'ar' ? 'إضافة ريب بنكي جديد' : 'Add New Bank Account')}
                   </h3>
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-xs text-slate-400">
                     {lang === 'ar' ? 'ستظهر هذه البيانات مباشرة للزوار والعملاء' : 'Changes reflect on the public page'}
                   </span>
                 </div>
@@ -408,7 +410,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   setIsAddingNew(false);
                   setEditingAccount(null);
                 }}
-                className="p-1.5 rounded-full text-zinc-400 hover:text-white"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800"
               >
                 <X className="w-5 h-5" />
               </button>

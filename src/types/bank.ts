@@ -14,4 +14,7 @@ export interface BankAccount {
 
 export type LegalDocType = 'terms' | 'privacy' | 'copyright' | 'legal-notice' | 'cookies';
 
-export type ActivePage = 'main' | 'banks' | 'admin' | LegalDocType;
+export type PageSection = 'home' | 'about' | 'disciplines' | 'projects' | 'banks' | 'contact';
+
+export type ActivePage = 'home' | 'main' | 'about' | 'disciplines' | 'projects' | 'banks' | 'contact' | 'admin' | LegalDocType;
+

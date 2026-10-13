@@ -1,161 +1,307 @@
 import React from 'react';
-import { Target, BookOpen, Lightbulb, Hammer, Sparkles, ShoppingBag, CheckCircle2 } from 'lucide-react';
+import {
+  Target,
+  BookOpen,
+  Lightbulb,
+  Hammer,
+  CheckCircle2,
+  Home,
+  ArrowRight,
+  ArrowLeft,
+  Briefcase,
+  TrendingUp,
+  Compass,
+  Award,
+  Sparkles,
+  MessageCircle
+} from 'lucide-react';
 import { Language } from '../types';
+import { ActivePage } from '../types/bank';
 
 interface AboutProps {
   lang: Language;
+  onNavigatePage?: (page: ActivePage) => void;
 }
 
-export const About: React.FC<AboutProps> = ({ lang }) => {
+export const About: React.FC<AboutProps> = ({ lang, onNavigatePage }) => {
+  const isRTL = lang === 'ar';
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+
   const pillars = [
     {
       icon: Target,
       titleAr: 'الطموح والوضوح',
       titleEn: 'Ambition & Clarity',
-      descAr: 'الإيمان بأن الفرص في التجارة والأعمال الرقمية لا حدود لها لمن يمتلك رؤية دقيقة وإصراراً على التطوير دون تردد.',
-      descEn: 'Relentless pursuit of high-impact digital leverage and refusing to settle for standard benchmarks.',
-      color: 'text-emerald-400',
-      border: 'border-emerald-500/20'
+      descAr: 'خطة واضحة وإصرار مستمر على بناء مشاريع رقمية ذات جدوى وقيمة حقيقية.',
+      descEn: 'Clear strategy and persistent focus on building viable, high-value digital ventures.'
     },
     {
       icon: BookOpen,
-      titleAr: 'التعلم المستمر والمواكبة',
+      titleAr: 'التعلم والتطور المستمر',
       titleEn: 'Continuous Learning',
-      descAr: 'تحديث المهارات يومياً في سلوك المستهلك، خوارزميات التجارة الإلكترونية، وأحدث منصات التسويق الرقمي.',
-      descEn: 'Disciplined daily study of consumer psychology, e-commerce mechanics, and emerging acquisition funnels.',
-      color: 'text-amber-400',
-      border: 'border-amber-500/20'
+      descAr: 'مواكبة يومية لسلوك المستهلكين، تقنيات التجارة الحديثة، وأحدث استراتيجيات النمو.',
+      descEn: 'Daily study of consumer behavior, e-commerce mechanics, and growth strategies.'
     },
     {
       icon: Lightbulb,
       titleAr: 'الابتكار والاختبار',
       titleEn: 'Innovation & Testing',
-      descAr: 'الابتعاد عن الحلول المكررة وتجربة عروض تجارية مبتكرة، استراتيجيات إعلانية فعالة، ومسارات بيع سريعة.',
-      descEn: 'Testing high-converting angles in commercial positioning, sales funnels, and customer retention.',
-      color: 'text-teal-400',
-      border: 'border-teal-500/20'
+      descAr: 'تطوير عروض تجارية مبتكرة ومسارات تحويل سلسة تضمن أفضل تجربة للمستخدم.',
+      descEn: 'Refining high-converting offers, smooth checkout flows, and user experiences.'
     },
     {
       icon: Hammer,
-      titleAr: 'بناء المشاريع والعمل الرقمي',
-      titleEn: 'Building & Execution',
-      descAr: 'الانتقال الفوري من حيز الأفكار إلى بناء المتاجر الإلكترونية، تشغيل العمليات، وتقديم خدمات رقمية حقيقية.',
-      descEn: 'Transforming abstract insights into functional online stores, digital services, and scalable ventures.',
-      color: 'text-sky-400',
-      border: 'border-sky-500/20'
+      titleAr: 'التنفيذ والعمل الواقعي',
+      titleEn: 'Execution & Building',
+      descAr: 'الانتقال الفوري من الأفكار النظرية إلى إطلاق المتاجر وتشغيل المشاريع بنجاح.',
+      descEn: 'Transforming ideas into functioning online stores and operational business assets.'
+    }
+  ];
+
+  const milestones = [
+    {
+      year: '2022',
+      titleAr: 'الانطلاق في التجارة الرقمية',
+      titleEn: 'Entering Digital E-Commerce',
+      descAr: 'تأسيس أول متجر إلكتروني واستكشاف مسارات المنتجات وسلاسل الإمداد والتسويق الرقمي.',
+      descEn: 'Launching initial e-commerce operations, exploring product research, and unit economics.'
+    },
+    {
+      year: '2023 - 2024',
+      titleAr: 'تطوير المشاريع وتوسيع المبيعات',
+      titleEn: 'Scaling & Funnel Optimization',
+      descAr: 'بناء استراتيجيات تسويق بالمحتوى والإعلانات الموجهة مع تحسين تجربة الشراء ومعدلات التحويل.',
+      descEn: 'Mastering conversion funnels, targeted media campaigns, and customer retention systems.'
+    },
+    {
+      year: '2025 - 2026',
+      titleAr: 'بناء منظومة الأعمال الرقمية',
+      titleEn: 'Integrated Venture Ecosystem',
+      descAr: 'التوسع نحو إطلاق حلول متكاملة، تقديم استشارات تجارية، وإدارة عمليات المشاريع أونلاين بكفاءة.',
+      descEn: 'Architecting end-to-end digital ventures, advisory services, and operational scalability.'
+    }
+  ];
+
+  const coreStrengths = [
+    {
+      labelAr: 'هندسة المتاجر الإلكترونية',
+      labelEn: 'E-Commerce Store Architecture',
+      detailAr: 'تصميم وبناء متاجر سريعة، متوافقة مع الهواتف، ومحسنة للتحويل (Conversion Rate Optimization).'
+    },
+    {
+      labelAr: 'التسويق وجلب العملاء',
+      labelEn: 'Customer Acquisition & Growth',
+      detailAr: 'بناء حملات إعلانية مربحة وصناعة محتوى تسويقي مقنع يستهدف الجمهور المناسب بدقة.'
+    },
+    {
+      labelAr: 'تطوير المنتجات والعروض',
+      labelEn: 'Offer Creation & Positioning',
+      detailAr: 'صياغة عروض تجارية قوية وفريدة تمنح المتجر تفوقاً تنافسياً واضحاً في السوق.'
+    },
+    {
+      labelAr: 'إدارة العمليات والمدفوعات',
+      labelEn: 'Operations & Payment Integrity',
+      detailAr: 'ربط بوابات الدفع، متابعة التحويلات البنكية المغربية والدولية، وتنسيق خدمات ما بعد البيع.'
     }
   ];
 
   return (
-    <section id="about" className="py-24 relative overflow-hidden bg-[#0A0C11]/50 border-t border-b border-white/[0.04]">
-      {/* Background radial accent */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
+    <div className="py-28 pt-36 bg-[#0E1117] text-start min-h-screen">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-400 mb-8">
+          <button
+            onClick={() => onNavigatePage && onNavigatePage('home')}
+            className="hover:text-amber-400 transition-colors flex items-center gap-1 cursor-pointer"
+          >
+            <Home className="w-3.5 h-3.5" />
+            <span>{lang === 'ar' ? 'الرئيسية' : 'Home'}</span>
+          </button>
+          <span>/</span>
+          <span className="text-amber-400 font-semibold">{lang === 'ar' ? 'من أنا' : 'About Me'}</span>
+        </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{lang === 'ar' ? 'النبذة والرؤية' : 'Identity & Vision'}</span>
+        {/* Section Hero Header */}
+        <div className="mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-amber-400 text-xs font-medium mb-4 shadow-xs">
+            <Compass className="w-3.5 h-3.5" />
+            <span>{lang === 'ar' ? 'سيرة ورؤية رائد الأعمال الرقمي' : 'Digital Entrepreneur Bio & Vision'}</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-6">
-            {lang === 'ar' ? 'من أنا؟' : 'Who Am I?'}
-          </h2>
+          <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 tracking-tight mb-5 leading-tight">
+            {lang === 'ar' ? 'أيوب الميسوري — بناء المشاريع بوضوح وانضباط' : 'Ayoub El Maissouri — Discipline & Clear Execution'}
+          </h1>
 
-          <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
+          <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-3xl font-normal">
             {lang === 'ar'
-              ? 'أنا أيوب الميسوري، رائد أعمال رقمي شغوف بعالم الإنترنت واستكشاف فرصه التجارية الواعدة. أعمل في مجالات التجارة الإلكترونية، بناء المشاريع الرقمية أونلاين، التسويق الرقمي، وتطوير المنتجات والخدمات على شبكة الإنترنت؛ بهدف خلق قيمة مستدامة وتحويل الأفكار الطموحة إلى مشاريع قائمة ومربحة.'
-              : 'I am Ayoub El Maissouri, a digital entrepreneur operating across e-commerce, online venture architecture, digital marketing, and automated internet services. My focus is engineering real value, executing with discipline, and transforming ambitious commercial ideas into profitable operational reality.'}
+              ? 'رائد أعمال رقمي مغربي، أعمل على بناء وإطلاق المشاريع التجارية على الإنترنت وتطوير المتاجر الإلكترونية وحلول التسويق الحديثة، مع التركيز التام على القيمة المضافة والنتائج الواقعية.'
+              : 'A digital entrepreneur based in Morocco, focused on architecting online commercial ventures, high-converting e-commerce stores, and data-driven growth funnels.'}
           </p>
         </div>
 
-        {/* Narrative & Focus Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16">
-          {/* Main Story Box */}
-          <div className="lg:col-span-7 bg-zinc-950/70 p-6 sm:p-8 rounded-2xl border border-white/[0.07] relative shadow-xl text-start">
-            <div className="space-y-5 text-zinc-300 text-sm sm:text-base leading-relaxed">
-              <p>
-                {lang === 'ar'
-                  ? 'لم أتعامل يوماً مع الإنترنت كمجرد مساحة للتصفح العابر، بل كمختبر مفتوح لبناء المشاريع وتأسيس مصادر الدخل الرقمية. أؤمن بأن القوة الحقيقية في العصر الحالي تكمن في القدرة على فهم احتياجات السوق، وبناء متاجر وعروض تجارية تلبي طلبات المشترين، واستخدام التسويق الرقمي للوصول إلى الجمهور المناسب.'
-                  : 'I have never viewed the internet as a passive entertainment feed, but rather as an open laboratory for building businesses and launching autonomous digital engines. Modern leverage lies in understanding customer demand, launching seamless digital commerce platforms, and mastering traffic acquisition.'}
-              </p>
+        {/* Narrative & Philosophy Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+          {/* Main Story Narrative */}
+          <div className="lg:col-span-7 space-y-5 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-900/50 p-6 sm:p-8 rounded-3xl border border-slate-800/80">
+            <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2.5">
+              <Sparkles className="w-5 h-5 text-amber-400" />
+              <span>{lang === 'ar' ? 'فلسفتي في ريادة الأعمال الرقمية' : 'My Entrepreneurial Philosophy'}</span>
+            </h2>
 
-              <p>
-                {lang === 'ar'
-                  ? 'منهجيتي في العمل تقوم على الانضباط والتنفيذ العملي بدلاً من الوعود النظرية. سواء كان الأمر يتعلق بإطلاق متجر إلكتروني جديد، تطوير مسار مبيعات لخدمة رقمية، أو إدارة حملة تسويقية، فإنني أضع الجودة، تجربة العميل، والتنفيذ السريع كركائز أساسية لا مساومة عليها.'
-                  : 'My methodology centers on rigorous operational discipline and practical execution over theoretical noise. Whether launching a new e-commerce store, scaling a digital service funnel, or optimizing traffic, craft and rapid delivery are non-negotiable.'}
-              </p>
-
-              <div className="pt-4 border-t border-white/[0.06] flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-zinc-400 font-medium">
-                <div className="flex items-center gap-1.5 text-emerald-400">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{lang === 'ar' ? 'تركيز كلي على التنفيذ الفعلي' : 'Pragmatic Execution'}</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-amber-400">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{lang === 'ar' ? 'عقلية تجارية ونمو مستدام' : 'Commercial Growth Mindset'}</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-teal-400">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{lang === 'ar' ? 'بناء أصول ومتاجر رقمية' : 'Digital Retail Assets'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Core Philosophy Callout */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-zinc-900/90 to-zinc-950 p-6 sm:p-8 rounded-2xl border border-emerald-500/20 relative shadow-xl text-start">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-6">
-              <ShoppingBag className="w-6 h-6" />
-            </div>
-
-            <h3 className="text-xl font-bold text-white mb-3">
-              {lang === 'ar' ? 'تحويل الأفكار إلى نتائج ومبيعات' : 'From Concept to Profitable Scale'}
-            </h3>
-
-            <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+            <p>
               {lang === 'ar'
-                ? 'الأفكار بمفردها لا تكفي ما لم تقترن بمتجر فعلي، خطة تسويقية محكمة، ونظام استقبال وتوصيل طلبات يعتمد عليه. التركيز الدائم هو تحويل كل رؤية إلى خطة عمل تنتج قيمة تجارية قابلة للقياس.'
-                : 'Raw ideas have zero enterprise value without execution systems. The constant objective is translating every ambition into tangible assets: a functioning store, high-intent funnels, and repeatable customer orders.'}
+                ? 'أتعامل مع شبكة الإنترنت كمجال مفتوح للإنتاج وبناء الأصول المستقلة. لست من مؤيدي الحلول السطحية أو الوعود البراقة، بل أؤمن بالعمل الممنهج القائم على فهم رغبات الزبائن وصياغة عروض لا يمكن رفضها.'
+                : 'I approach the digital space as an ecosystem for disciplined production and tangible asset creation. Rather than chasing short-term trends, I prioritize robust market fundamentals, deep customer empathy, and compelling offer mechanics.'}
             </p>
 
-            <div className="p-4 rounded-xl bg-black/40 border border-white/[0.04]">
-              <span className="text-xs uppercase tracking-wider text-emerald-400 font-semibold block mb-1">
-                {lang === 'ar' ? 'المبدأ الأساسي' : 'Guiding Maxim'}
-              </span>
-              <p className="text-xs sm:text-sm text-zinc-300 italic">
-                {lang === 'ar'
-                  ? '“لا تخف من البداية، بل ابنِ متجرك ومشروعك الرقمي ونفّذ بانضباط يومي.”'
-                  : '“Start building, deploy your digital venture, and execute with relentless daily discipline.”'}
-              </p>
+            <p>
+              {lang === 'ar'
+                ? 'في كل مشروع أبدأه، أضع تجربة العميل وجودة التنفيذ في المقام الأول. من تصميم واجهة المتجر وسرعة التصفح، إلى سلاسة إتمام الطلب ومصداقية الدفع والتسليم، كل تفصيل يصنع فارقاً جوهرياً.'
+                : 'Across every venture, frictionless user experience and meticulous execution are top priorities. From instant page performance and smooth checkout flows to transparent payment terms, every detail counts.'}
+            </p>
+
+            <div className="pt-2 space-y-3 text-xs sm:text-sm text-slate-200">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{lang === 'ar' ? 'التركيز على الربحية المستدامة ونمو المشاريع' : 'Focus on sustained profitability & scalable systems'}</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{lang === 'ar' ? 'شفافية كاملة في التعاملات المالية والبنكية' : 'Full transparency in commercial and banking operations'}</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{lang === 'ar' ? 'التطوير المستمر للأدوات والتقنيات المعاصرة' : 'Continuous iteration with contemporary technologies'}</span>
+              </div>
             </div>
+          </div>
+
+          {/* 4 Pillars List */}
+          <div className="lg:col-span-5 grid grid-cols-1 gap-4">
+            {pillars.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={index}
+                  className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700/80 transition-colors"
+                >
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-slate-800/80 flex items-center justify-center text-amber-400 shrink-0 shadow-xs">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-100 mb-1">
+                        {lang === 'ar' ? item.titleAr : item.titleEn}
+                      </h3>
+                      <p className="text-xs text-slate-400 leading-relaxed font-normal">
+                        {lang === 'ar' ? item.descAr : item.descEn}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* 4 Pillars Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-start">
-          {pillars.map((item, index) => {
-            const Icon = item.icon;
-            return (
+        {/* Core Competencies & Skills */}
+        <div className="mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-100 tracking-tight mb-3">
+              {lang === 'ar' ? 'القدرات والمهارات المحورية' : 'Core Capabilities & Strengths'}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400">
+              {lang === 'ar'
+                ? 'المهارات العملية التي أوظفها يومياً في بناء وإدارة المتاجر والمشاريع الرقمية.'
+                : 'Applied disciplines deployed daily to engineer, scale, and optimize commercial platforms.'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {coreStrengths.map((item, i) => (
               <div
-                key={index}
-                className={`p-6 rounded-2xl bg-zinc-950/60 border ${item.border} hover:border-white/20 transition-all duration-300 hover:-translate-y-1 group shadow-lg`}
+                key={i}
+                className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between"
               >
-                <div className={`w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center ${item.color} mb-4 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-5 h-5" />
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-amber-400" />
+                    <h3 className="text-sm font-bold text-slate-100">
+                      {lang === 'ar' ? item.labelAr : item.labelEn}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {lang === 'ar' ? item.detailAr : item.detailAr}
+                  </p>
                 </div>
-                <h4 className="text-base font-bold text-white mb-2">
-                  {lang === 'ar' ? item.titleAr : item.titleEn}
-                </h4>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                  {lang === 'ar' ? item.descAr : item.descEn}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Milestones / Journey */}
+        <div className="mb-16 p-6 sm:p-8 rounded-3xl bg-slate-900/40 border border-slate-800/80">
+          <h2 className="text-xl font-bold text-slate-100 mb-6 flex items-center gap-2">
+            <Award className="w-5 h-5 text-amber-400" />
+            <span>{lang === 'ar' ? 'محطات المسيرة والتطور' : 'Milestones & Evolution'}</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {milestones.map((m, idx) => (
+              <div key={idx} className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800/70">
+                <span className="text-xs font-mono font-bold text-amber-400 block mb-1">
+                  {m.year}
+                </span>
+                <h3 className="text-sm font-bold text-slate-100 mb-2">
+                  {lang === 'ar' ? m.titleAr : m.titleEn}
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  {lang === 'ar' ? m.descAr : m.descEn}
                 </p>
               </div>
-            );
-          })}
+            ))}
+          </div>
+        </div>
+
+        {/* Guiding Quote */}
+        <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/50 border border-slate-800/80 text-center mb-12">
+          <p className="text-sm sm:text-base text-slate-200 font-medium italic leading-relaxed max-w-2xl mx-auto">
+            {lang === 'ar'
+              ? '“الإنترنت ليس مجرد مكان للعمل، بل بيئة لبناء مشاريع حقيقية ومستدامة عبر وضوح الرؤية والانضباط اليومي في التنفيذ.”'
+              : '“The internet is an open landscape to build enduring ventures through vision and relentless daily execution.”'}
+          </p>
+          <span className="block text-xs text-amber-400/90 font-mono mt-3">
+            — {lang === 'ar' ? 'أيوب الميسوري' : 'Ayoub El Maissouri'}
+          </span>
+        </div>
+
+        {/* Direct Action Navigation */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 border-t border-slate-800/60">
+          <button
+            onClick={() => onNavigatePage && onNavigatePage('disciplines')}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-all cursor-pointer"
+          >
+            <span>{lang === 'ar' ? 'تصفح مجالات العمل والخدمات' : 'Explore Disciplines'}</span>
+            <ArrowIcon className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={() => onNavigatePage && onNavigatePage('projects')}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all cursor-pointer"
+          >
+            <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+            <span>{lang === 'ar' ? 'معرض الأعمال والمشاريع' : 'View Projects'}</span>
+          </button>
+
+          <button
+            onClick={() => onNavigatePage && onNavigatePage('contact')}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all cursor-pointer"
+          >
+            <MessageCircle className="w-3.5 h-3.5 text-amber-400" />
+            <span>{lang === 'ar' ? 'تواصل معي' : 'Contact Me'}</span>
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

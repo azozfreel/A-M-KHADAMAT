@@ -1,41 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { About } from './components/About';
-import { Disciplines } from './components/Disciplines';
-import { Projects } from './components/Projects';
-import { Philosophy } from './components/Philosophy';
-import { Indicators } from './components/Indicators';
-import { CTASection } from './components/CTASection';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
+import { HomePage } from './components/HomePage';
+import { AboutPage } from './components/AboutPage';
+import { DisciplinesPage } from './components/DisciplinesPage';
+import { ProjectsPage } from './components/ProjectsPage';
+import { ContactPage } from './components/ContactPage';
 import { BankAccountsPage } from './components/BankAccountsPage';
 import { AdminPortal } from './components/AdminPortal';
 import { LegalPages } from './components/LegalPages';
 import { CookieBanner } from './components/CookieBanner';
-import { Language } from './types';
+import { Footer } from './components/Footer';
+import { Language, Theme } from './types';
 import { ActivePage, LegalDocType } from './types/bank';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ar');
-  const [activeSection, setActiveSection] = useState<string>('hero');
-  const [currentPage, setCurrentPage] = useState<ActivePage>('main');
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('ayoub_theme') as Theme;
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        return savedTheme;
+      }
+    }
+    return 'dark';
+  });
+
+  const [currentPage, setCurrentPage] = useState<ActivePage>('home');
   const [inquiryTopic, setInquiryTopic] = useState<string>('');
 
-  // Synchronize HTML attributes with language
+  // Synchronize HTML dir & lang
   useEffect(() => {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
   }, [lang]);
 
-  // Sync with URL Hash (#banks, #admin, #terms, #privacy, #copyright, #legal-notice, #cookies)
+  // Synchronize Theme class and localStorage
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('dark', 'light');
+    root.classList.add(theme);
+    localStorage.setItem('ayoub_theme', theme);
+  }, [theme]);
+
+  // Synchronize URL Hash navigation
   useEffect(() => {
     const checkHash = () => {
       const hash = window.location.hash.toLowerCase().replace('#', '');
       const legalDocs: LegalDocType[] = ['terms', 'privacy', 'copyright', 'legal-notice', 'cookies'];
 
-      if (hash === 'banks' || hash === 'ribs') {
+      if (!hash || hash === 'home' || hash === 'main') {
+        setCurrentPage('home');
+      } else if (hash === 'about') {
+        setCurrentPage('about');
+      } else if (hash === 'disciplines' || hash === 'services') {
+        setCurrentPage('disciplines');
+      } else if (hash === 'projects' || hash === 'portfolio') {
+        setCurrentPage('projects');
+      } else if (hash === 'banks' || hash === 'ribs') {
         setCurrentPage('banks');
+      } else if (hash === 'contact') {
+        setCurrentPage('contact');
       } else if (hash === 'admin') {
         setCurrentPage('admin');
       } else if (legalDocs.includes(hash as LegalDocType)) {
@@ -48,37 +72,17 @@ export default function App() {
     return () => window.removeEventListener('hashchange', checkHash);
   }, []);
 
-  // Track active section for navigation on main page
-  useEffect(() => {
-    if (currentPage !== 'main') return;
-
-    const sectionIds = ['hero', 'about', 'disciplines', 'projects', 'philosophy', 'contact'];
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(id);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [currentPage]);
-
   const handleToggleLang = () => {
     setLang((prev) => (prev === 'ar' ? 'en' : 'ar'));
   };
 
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   const handleNavigatePage = (page: ActivePage) => {
     setCurrentPage(page);
-    if (page === 'main') {
+    if (page === 'home' || page === 'main') {
       window.history.pushState(null, '', window.location.pathname);
     } else {
       window.location.hash = page;
@@ -88,79 +92,94 @@ export default function App() {
 
   const handleInquireProject = (projectTitle: string) => {
     setInquiryTopic(projectTitle);
-    if (currentPage !== 'main') {
-      setCurrentPage('main');
-    }
-    setTimeout(() => {
-      const contactEl = document.getElementById('contact');
-      if (contactEl) {
-        contactEl.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    handleNavigatePage('contact');
   };
 
-  const isLegalPage = ['terms', 'privacy', 'copyright', 'legal-notice', 'cookies'].includes(currentPage);
+  const handleInquireService = (serviceName: string) => {
+    setInquiryTopic(serviceName);
+    handleNavigatePage('contact');
+  };
+
+  const isLegalPage = ['terms', 'privacy', 'copyright', 'legal-notice', 'cookies'].includes(
+    currentPage
+  );
 
   return (
-    <div className="min-h-screen bg-[#08090D] text-zinc-100 flex flex-col font-sans selection:bg-emerald-500/25 selection:text-emerald-300">
-      {/* Sticky Navbar */}
+    <div
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-250 ${
+        theme === 'dark' ? 'bg-[#0D0F14] text-slate-100' : 'bg-[#F8FAFC] text-slate-900'
+      }`}
+    >
+      {/* Top Fixed Header with Navigation and Controls */}
       <Navbar
         lang={lang}
         onToggleLang={handleToggleLang}
-        activeSection={activeSection}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         currentPage={currentPage}
         onNavigatePage={handleNavigatePage}
       />
 
-      {/* Main Content Router */}
+      {/* Main Pages Router (كل قسم في صفحة مخصصة ومنظمة) */}
       <main className="flex-grow">
-        {currentPage === 'main' && (
-          <>
-            {/* Hero Section */}
-            <Hero lang={lang} />
+        {(currentPage === 'home' || currentPage === 'main') && (
+          <HomePage
+            lang={lang}
+            theme={theme}
+            onNavigatePage={handleNavigatePage}
+            onInquireProject={handleInquireProject}
+          />
+        )}
 
-            {/* About Section */}
-            <About lang={lang} />
+        {currentPage === 'about' && (
+          <AboutPage
+            lang={lang}
+            theme={theme}
+            onNavigatePage={handleNavigatePage}
+          />
+        )}
 
-            {/* Disciplines Section */}
-            <Disciplines lang={lang} />
+        {currentPage === 'disciplines' && (
+          <DisciplinesPage
+            lang={lang}
+            theme={theme}
+            onNavigatePage={handleNavigatePage}
+            onInquireService={handleInquireService}
+          />
+        )}
 
-            {/* Projects / Portfolio Section */}
-            <Projects
-              lang={lang}
-              onInquireProject={handleInquireProject}
-            />
-
-            {/* Philosophy Section */}
-            <Philosophy lang={lang} />
-
-            {/* Indicators Section */}
-            <Indicators lang={lang} />
-
-            {/* Call to Action Section */}
-            <CTASection lang={lang} />
-
-            {/* Contact Section */}
-            <Contact
-              lang={lang}
-              preselectedTopic={inquiryTopic}
-              onNavigateBanks={() => handleNavigatePage('banks')}
-            />
-          </>
+        {currentPage === 'projects' && (
+          <ProjectsPage
+            lang={lang}
+            theme={theme}
+            onNavigatePage={handleNavigatePage}
+            onInquireProject={handleInquireProject}
+          />
         )}
 
         {currentPage === 'banks' && (
           <BankAccountsPage
             lang={lang}
-            onNavigateHome={() => handleNavigatePage('main')}
+            theme={theme}
+            onNavigateHome={() => handleNavigatePage('home')}
             onNavigateAdmin={() => handleNavigatePage('admin')}
+          />
+        )}
+
+        {currentPage === 'contact' && (
+          <ContactPage
+            lang={lang}
+            theme={theme}
+            preselectedTopic={inquiryTopic}
+            onNavigatePage={handleNavigatePage}
           />
         )}
 
         {currentPage === 'admin' && (
           <AdminPortal
             lang={lang}
-            onNavigateHome={() => handleNavigatePage('main')}
+            theme={theme}
+            onNavigateHome={() => handleNavigatePage('home')}
             onNavigateBanks={() => handleNavigatePage('banks')}
           />
         )}
@@ -168,9 +187,10 @@ export default function App() {
         {isLegalPage && (
           <LegalPages
             currentDoc={currentPage as LegalDocType}
-            onChangeDoc={(doc) => handleNavigatePage(doc)}
-            onNavigateHome={() => handleNavigatePage('main')}
+            onChangeDoc={(doc: LegalDocType) => handleNavigatePage(doc)}
+            onNavigateHome={() => handleNavigatePage('home')}
             lang={lang}
+            theme={theme}
           />
         )}
       </main>
@@ -178,12 +198,12 @@ export default function App() {
       {/* Footer */}
       <Footer
         lang={lang}
-        onNavigateBanks={() => handleNavigatePage('banks')}
-        onNavigateAdmin={() => handleNavigatePage('admin')}
-        onNavigateLegal={(doc) => handleNavigatePage(doc)}
+        theme={theme}
+        onNavigatePage={handleNavigatePage}
+        onNavigateLegal={(doc: LegalDocType) => handleNavigatePage(doc)}
       />
 
-      {/* Cookie Consent Banner */}
+      {/* GDPR / Cookie Banner */}
       <CookieBanner
         lang={lang}
         onViewPolicy={() => handleNavigatePage('cookies')}

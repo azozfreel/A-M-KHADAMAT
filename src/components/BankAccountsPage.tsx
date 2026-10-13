@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CreditCard,
+  Building2,
   Copy,
   Check,
-  Building2,
   ShieldCheck,
   ArrowRight,
   ArrowLeft,
   Lock,
   MessageCircle,
-  Sparkles,
-  Info,
-  ExternalLink
+  Info
 } from 'lucide-react';
 import { bankService } from '../services/bankService';
 import { BankAccount } from '../types/bank';
-import { Language } from '../types';
+import { Language, Theme } from '../types';
 
 interface BankAccountsPageProps {
   lang: Language;
+  theme?: Theme;
   onNavigateHome: () => void;
   onNavigateAdmin: () => void;
 }
 
 export const BankAccountsPage: React.FC<BankAccountsPageProps> = ({
   lang,
+  theme = 'dark',
   onNavigateHome,
   onNavigateAdmin,
 }) => {
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const isDark = theme === 'dark';
+
   useEffect(() => {
     setAccounts(bankService.getActiveAccounts());
   }, []);
 
   const handleCopyRib = (id: string, rib: string) => {
-    // Remove spaces before copying for clean paste or keep formatted
     const cleanRib = rib.replace(/\s+/g, '');
     navigator.clipboard.writeText(cleanRib);
     setCopiedId(id);
@@ -47,138 +47,216 @@ export const BankAccountsPage: React.FC<BankAccountsPageProps> = ({
   const ArrowBackIcon = isRTL ? ArrowRight : ArrowLeft;
 
   return (
-    <div className="min-h-screen bg-[#08090D] text-zinc-100 pt-28 pb-20 relative overflow-hidden">
-      {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-[400px] h-[300px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="min-h-screen pt-32 pb-24 text-start">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Navigation Top Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-10 pb-6 border-b border-white/[0.08]">
+        <div
+          className={`flex flex-wrap items-center justify-between gap-4 mb-10 pb-4 border-b ${
+            isDark ? 'border-slate-800/70' : 'border-slate-200'
+          }`}
+        >
           <button
             onClick={onNavigateHome}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-white/[0.08] transition-colors"
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium border transition-colors cursor-pointer ${
+              isDark
+                ? 'text-slate-300 hover:text-white bg-slate-900/80 border-slate-800'
+                : 'text-slate-700 hover:text-slate-900 bg-white border-slate-200 shadow-xs'
+            }`}
           >
-            <ArrowBackIcon className="w-4 h-4" />
+            <ArrowBackIcon className="w-3.5 h-3.5" />
             <span>{lang === 'ar' ? 'العودة إلى الموقع الرئيسي' : 'Back to Home'}</span>
           </button>
 
           <button
             onClick={onNavigateAdmin}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-emerald-300 bg-zinc-950 hover:bg-zinc-900 border border-white/[0.06] hover:border-emerald-500/30 transition-all"
-            title="دخول المسؤول لإضافة وتعديل الحسابات"
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium border transition-colors cursor-pointer ${
+              isDark
+                ? 'text-slate-400 hover:text-slate-200 bg-slate-900/80 border-slate-800'
+                : 'text-slate-600 hover:text-slate-900 bg-white border-slate-200 shadow-xs'
+            }`}
+            title="دخول المسؤول"
           >
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{lang === 'ar' ? 'لوحة تحكم المسؤول' : 'Admin Portal'}</span>
+            <Lock className="w-3.5 h-3.5" />
+            <span>{lang === 'ar' ? 'بوابة المسؤول' : 'Admin Portal'}</span>
           </button>
         </div>
 
         {/* Page Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-4">
-            <ShieldCheck className="w-4 h-4" />
-            <span>{lang === 'ar' ? 'بيانات التحويل البنكي المعتمدة' : 'Official Banking & RIB Directory'}</span>
-          </div>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-semibold text-amber-500 tracking-wider uppercase mb-2 block">
+            {lang === 'ar' ? 'بيانات التحويل المعتمدة' : 'Official Banking Directory'}
+          </span>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
+          <h1
+            className={`text-3xl sm:text-4xl font-bold tracking-tight mb-4 ${
+              isDark ? 'text-slate-100' : 'text-slate-900'
+            }`}
+          >
             {lang === 'ar' ? 'الحسابات والريبات البنكية' : 'Bank Accounts & RIB Details'}
           </h1>
 
-          <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-normal max-w-2xl mx-auto">
+          <p
+            className={`text-sm sm:text-base leading-relaxed font-normal ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}
+          >
             {lang === 'ar'
-              ? 'الحسابات البنكية الرسمية لأيوب الميسوري لإجراء التحويلات المباشرة لمعاملات المشاريع، التجارة الإلكترونية، الخدمات الرقمية، والاستشارات.'
-              : 'Verified bank accounts and RIB information for direct transfers related to digital ventures, e-commerce, and consultations.'}
+              ? 'الحسابات البنكية الرسمية لأيوب الميسوري لإجراء التحويلات المباشرة لمعاملات المشاريع، التجارة الإلكترونية، والخدمات الرقمية.'
+              : 'Verified bank accounts and RIB information for direct transfers related to digital ventures and e-commerce.'}
           </p>
         </div>
 
         {/* Bank Cards Grid */}
         {accounts.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-zinc-950/80 border border-white/[0.08]">
-            <Building2 className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-white mb-2">
-              {lang === 'ar' ? 'لا توجد حسابات بنكية نشطة حالياً' : 'No Active Bank Accounts'}
+          <div
+            className={`p-10 text-center rounded-2xl border shadow-xs ${
+              isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+            }`}
+          >
+            <Building2 className="w-10 h-10 text-slate-500 mx-auto mb-3" />
+            <h3
+              className={`text-base font-bold mb-1 ${
+                isDark ? 'text-slate-100' : 'text-slate-900'
+              }`}
+            >
+              {lang === 'ar' ? 'لا توجد حسابات بنكية نشطة حالياً' : 'No Active Accounts'}
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-400 mb-6">
-              {lang === 'ar' ? 'يمكن للمسؤول إضافة حسابات بنكية جديدة من لوحة التحكم.' : 'The administrator can add bank accounts from the admin portal.'}
+            <p
+              className={`text-xs sm:text-sm mb-5 ${
+                isDark ? 'text-slate-400' : 'text-slate-500'
+              }`}
+            >
+              {lang === 'ar' ? 'يمكن للمسؤول إضافة حسابات جديدة من لوحة التحكم.' : 'The administrator can add bank accounts.'}
             </p>
             <button
               onClick={onNavigateAdmin}
-              className="px-6 py-2.5 rounded-full text-xs font-bold bg-emerald-500 text-zinc-950 hover:bg-emerald-400 transition-colors"
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-amber-400 text-slate-950 hover:bg-amber-300 transition-all cursor-pointer shadow-xs"
             >
-              {lang === 'ar' ? 'الدخول كمسؤول لإضافة حساب' : 'Log in as Admin to Add Account'}
+              {lang === 'ar' ? 'دخول المسؤول' : 'Log in as Admin'}
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
             {accounts.map((account) => {
               const isCopied = copiedId === account.id;
               return (
                 <div
                   key={account.id}
-                  className="rounded-3xl bg-zinc-950/90 border border-white/[0.08] hover:border-emerald-500/40 transition-all duration-300 p-6 sm:p-7 flex flex-col justify-between shadow-2xl relative group overflow-hidden"
+                  className={`rounded-2xl border p-6 flex flex-col justify-between shadow-xs transition-colors ${
+                    isDark
+                      ? 'bg-slate-900/50 border-slate-800/80 hover:border-slate-700/80'
+                      : 'bg-white border-slate-200 hover:border-amber-400/60'
+                  }`}
                 >
-                  {/* Subtle top card glow */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-
                   <div>
                     {/* Header: Bank Name & Currency badge */}
-                    <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-emerald-400 shrink-0 shadow-lg">
-                          <Building2 className="w-6 h-6" />
+                        <div
+                          className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${
+                            isDark
+                              ? 'bg-slate-800/90 border-slate-700/60 text-amber-400'
+                              : 'bg-amber-50 border-amber-200 text-amber-600'
+                          }`}
+                        >
+                          <Building2 className="w-4 h-4" />
                         </div>
                         <div>
-                          <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">
+                          <h3
+                            className={`text-base font-bold ${
+                              isDark ? 'text-slate-100' : 'text-slate-900'
+                            }`}
+                          >
                             {account.bankName}
                           </h3>
                           {account.accountType && (
-                            <span className="text-xs text-zinc-400 block mt-0.5">
+                            <span
+                              className={`text-xs block ${
+                                isDark ? 'text-slate-400' : 'text-slate-500'
+                              }`}
+                            >
                               {account.accountType}
                             </span>
                           )}
                         </div>
                       </div>
 
-                      <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 shrink-0">
+                      <span
+                        className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold shrink-0 ${
+                          isDark
+                            ? 'bg-slate-800 text-amber-300'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
                         {account.currency}
                       </span>
                     </div>
 
                     {/* Account Holder Name */}
-                    <div className="mb-5 p-3 rounded-xl bg-black/40 border border-white/[0.04]">
-                      <span className="text-[11px] font-mono text-zinc-400 block mb-0.5">
-                        {lang === 'ar' ? 'اسم صاحب الحساب (Titulaire)' : 'Account Holder'}
+                    <div
+                      className={`mb-3.5 p-3 rounded-xl border ${
+                        isDark
+                          ? 'bg-slate-950/70 border-slate-800/70'
+                          : 'bg-slate-50 border-slate-200'
+                      }`}
+                    >
+                      <span
+                        className={`text-[11px] font-mono block mb-0.5 ${
+                          isDark ? 'text-slate-400' : 'text-slate-500'
+                        }`}
+                      >
+                        {lang === 'ar' ? 'اسم صاحب الحساب' : 'Account Holder'}
                       </span>
-                      <span className="text-sm font-bold text-zinc-200">
+                      <span
+                        className={`text-xs sm:text-sm font-semibold ${
+                          isDark ? 'text-slate-200' : 'text-slate-800'
+                        }`}
+                      >
                         {account.accountHolder}
                       </span>
                     </div>
 
-                    {/* RIB (Relevé d'Identité Bancaire) Box with 1-Click Copy */}
-                    <div className="mb-4">
+                    {/* RIB Box with 1-Click Copy */}
+                    <div className="mb-3.5">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs font-mono text-emerald-400 font-semibold uppercase tracking-wider">
-                          {lang === 'ar' ? 'الريب البنكي (RIB / 24 أرقام)' : 'RIB (24 Digits / Bank Code)'}
+                        <span
+                          className={`text-xs font-mono font-medium ${
+                            isDark ? 'text-slate-400' : 'text-slate-500'
+                          }`}
+                        >
+                          {lang === 'ar' ? 'الريب البنكي (RIB)' : 'RIB (24 digits)'}
                         </span>
                         {isCopied && (
-                          <span className="text-[11px] font-bold text-emerald-400 flex items-center gap-1 animate-in fade-in">
+                          <span className="text-xs font-medium text-amber-500 flex items-center gap-1">
                             <Check className="w-3.5 h-3.5" />
-                            <span>{lang === 'ar' ? 'تم النسخ بنجاح!' : 'Copied!'}</span>
+                            <span>{lang === 'ar' ? 'تم النسخ' : 'Copied'}</span>
                           </span>
                         )}
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-zinc-900/90 border border-white/[0.1] hover:border-emerald-500/50 flex items-center justify-between gap-3 transition-colors">
-                        <span className="font-mono text-sm sm:text-base font-bold text-white tracking-widest break-all select-all">
+                      <div
+                        className={`p-3 rounded-xl border flex items-center justify-between gap-2.5 ${
+                          isDark
+                            ? 'bg-slate-950/80 border-slate-800'
+                            : 'bg-slate-50 border-slate-200'
+                        }`}
+                      >
+                        <span
+                          className={`font-mono text-xs sm:text-sm font-bold tracking-wider break-all select-all ${
+                            isDark ? 'text-slate-100' : 'text-slate-900'
+                          }`}
+                        >
                           {account.rib}
                         </span>
 
                         <button
                           onClick={() => handleCopyRib(account.id, account.rib)}
-                          className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 shrink-0 transition-colors cursor-pointer ${
                             isCopied
-                              ? 'bg-emerald-500 text-zinc-950'
-                              : 'bg-zinc-800 hover:bg-zinc-700 text-white'
+                              ? 'bg-amber-400 text-slate-950'
+                              : isDark
+                              ? 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                              : 'bg-slate-200 hover:bg-slate-300 text-slate-800'
                           }`}
                           title="نسخ رقم الريب البنكي"
                         >
@@ -197,27 +275,55 @@ export const BankAccountsPage: React.FC<BankAccountsPageProps> = ({
                       </div>
                     </div>
 
-                    {/* SWIFT / BIC if available */}
+                    {/* SWIFT if available */}
                     {account.swift && (
-                      <div className="flex items-center justify-between text-xs py-2 px-3 rounded-xl bg-black/30 border border-white/[0.04] mb-3">
-                        <span className="font-mono text-zinc-400">SWIFT / BIC Code</span>
-                        <span className="font-mono font-bold text-zinc-200">{account.swift}</span>
+                      <div
+                        className={`flex items-center justify-between text-xs py-2 px-3 rounded-xl border mb-2.5 ${
+                          isDark
+                            ? 'bg-slate-950/50 border-slate-800/60'
+                            : 'bg-slate-50 border-slate-200'
+                        }`}
+                      >
+                        <span className={`font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                          SWIFT Code
+                        </span>
+                        <span
+                          className={`font-mono font-medium ${
+                            isDark ? 'text-slate-200' : 'text-slate-800'
+                          }`}
+                        >
+                          {account.swift}
+                        </span>
                       </div>
                     )}
 
-                    {/* Notes / Instructions */}
+                    {/* Notes */}
                     {account.notes && (
-                      <div className="p-3 rounded-xl bg-zinc-900/40 border border-white/[0.04] text-xs text-zinc-400 flex items-start gap-2">
-                        <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <div
+                        className={`p-3 rounded-xl border text-xs flex items-start gap-2 ${
+                          isDark
+                            ? 'bg-slate-950/50 border-slate-800/60 text-slate-400'
+                            : 'bg-amber-50/50 border-amber-200/60 text-slate-600'
+                        }`}
+                      >
+                        <Info className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                         <p className="leading-relaxed">{account.notes}</p>
                       </div>
                     )}
                   </div>
 
-                  {/* Card Bottom: Send WhatsApp confirmation button */}
-                  <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                    <span className="text-[11px] text-zinc-400">
-                      {lang === 'ar' ? 'بعد إتمام التحويل' : 'After Transfer'}
+                  {/* WhatsApp button */}
+                  <div
+                    className={`mt-5 pt-3.5 border-t flex items-center justify-between ${
+                      isDark ? 'border-slate-800/60' : 'border-slate-200'
+                    }`}
+                  >
+                    <span
+                      className={`text-[11px] ${
+                        isDark ? 'text-slate-400' : 'text-slate-500'
+                      }`}
+                    >
+                      {lang === 'ar' ? 'بعد التحويل' : 'After Transfer'}
                     </span>
 
                     <a
@@ -226,10 +332,14 @@ export const BankAccountsPage: React.FC<BankAccountsPageProps> = ({
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                      className={`inline-flex items-center gap-1.5 text-xs font-medium transition-colors ${
+                        isDark
+                          ? 'text-slate-300 hover:text-amber-300'
+                          : 'text-slate-700 hover:text-amber-600'
+                      }`}
                     >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span>{lang === 'ar' ? 'إرسال وصل التحويل عبر واتساب' : 'Send Receipt via WhatsApp'}</span>
+                      <MessageCircle className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>{lang === 'ar' ? 'إرسال الوصل عبر واتساب' : 'Send Receipt'}</span>
                     </a>
                   </div>
                 </div>
@@ -238,13 +348,27 @@ export const BankAccountsPage: React.FC<BankAccountsPageProps> = ({
           </div>
         )}
 
-        {/* Security & Instructions Box */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-zinc-950/60 border border-white/[0.06] text-xs sm:text-sm text-zinc-400 space-y-3">
-          <div className="flex items-center gap-2 text-white font-bold">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            <span>{lang === 'ar' ? 'إرشادات هامة بخصوص التحويلات البنكية' : 'Important Transfer Guidelines'}</span>
+        {/* Transfer Guidelines Box - Clean & Subtle */}
+        <div
+          className={`p-6 rounded-2xl border text-xs sm:text-sm space-y-2.5 ${
+            isDark
+              ? 'bg-slate-900/40 border-slate-800/80 text-slate-400'
+              : 'bg-white border-slate-200 text-slate-600 shadow-xs'
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2 font-semibold ${
+              isDark ? 'text-slate-200' : 'text-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4 text-amber-500" />
+            <span>{lang === 'ar' ? 'إرشادات هامة بخصوص التحويل البنكي' : 'Transfer Guidelines'}</span>
           </div>
-          <ul className="list-disc list-inside space-y-1.5 text-zinc-400 pr-2">
+          <ul
+            className={`list-disc list-inside space-y-1.5 pr-1 leading-relaxed ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}
+          >
             <li>
               {lang === 'ar'
                 ? 'يرجى كتابة اسمكم أو رقم المعاملة في خانة سبب التحويل (Motif du virement).'
@@ -252,13 +376,13 @@ export const BankAccountsPage: React.FC<BankAccountsPageProps> = ({
             </li>
             <li>
               {lang === 'ar'
-                ? 'بعد إتمام التحويل بنجاح، يُرجى تصوير الوصل وإرساله عبر الواتساب لتأكيد الاستلام فوراً.'
-                : 'Send the transaction confirmation screenshot via WhatsApp for instant validation.'}
+                ? 'بعد إتمام التحويل، يُرجى تصوير الوصل وإرساله عبر الواتساب لتأكيد الاستلام.'
+                : 'Send the transaction confirmation screenshot via WhatsApp for validation.'}
             </li>
             <li>
               {lang === 'ar'
-                ? 'هذه الحسابات معتمدة وموثوقة حصرياً بالاسم الرسمي لأيوب الميسوري.'
-                : 'These accounts are officially registered under Ayoub El Meysouri.'}
+                ? 'هذه الحسابات معتمدة وموثوقة حصرياً باسم أيوب الميسوري (Ayoub El Maissouri).'
+                : 'These accounts are officially registered under Ayoub El Maissouri.'}
             </li>
           </ul>
         </div>
